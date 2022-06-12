@@ -25,28 +25,12 @@ router.get('/:slug', async function (req, res, next) {
   }
 })
 
-//like article
-router.get('/:id/likes', auth.verifyToken, async function (req, res, next) {
-  var id = req.params.id
+//filter by tags
+router.get('/:tags/tags', async function (req, res, next) {
+  var tags = req.params.tags;
   try {
-    var article = await Article.findByIdAndUpdate(id, {
-      $push: { likes: req.user.userId },
-    })
-    res.status(201).json({ article: article.likes.length })
-  } catch (error) {
-    next(error)
-  }
-})
-module.exports = router
-
-//delete 
-router.get('/:id/delete', auth.verifyToken, async function (req, res, next) {
-  var id = req.params.id
-  try {
-    var article = await Article.findByIdAndUpdate(id, {
-      $pull: { likes: req.user.userId },
-    })
-    res.status(201).json({ article: article.likes.length })
+    var articles = await Article.find({tagList}).populate('comment')
+    res.status(201).json({ articles })
   } catch (error) {
     next(error)
   }
@@ -65,6 +49,34 @@ router.post('/', async (req, res, next) => {
     next(error)
   }
 })
+
+//like article
+router.get('/:id/likes', async (req, res, next)=>{
+  var id = req.params.id
+  try {
+    var article = await Article.findByIdAndUpdate(id, {
+      $push: { likes: req.user.userId },
+    })
+    res.status(201).json({ article: article.likes.length })
+  } catch (error) {
+    next(error)
+  }
+})
+module.exports = router
+
+//delete 
+router.get('/:id/delete', auth.verifyToken, async (req, res, next)=>{
+  var id = req.params.id
+  try {
+    var article = await Article.findByIdAndUpdate(id, {
+      $pull: { likes: req.user.userId },
+    })
+    res.status(201).json({ article: article.likes.length })
+  } catch (error) {
+    next(error)
+  }
+})
+
 
 //Edit Article
 router.put('/:id/edit', async (req, res, next) => {
@@ -94,6 +106,8 @@ router.put('/:id/delete', async (req, res, next) => {
   } catch (error) {
     next(error)
   }
-})
+});
+
+
 
 module.exports = router

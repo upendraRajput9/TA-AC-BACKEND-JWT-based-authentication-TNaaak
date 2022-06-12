@@ -16,11 +16,10 @@ router.get('/',async function(req, res, next) {
 
 //register
 router.post('/',async (req,res,next)=>{
-
   try {
     var user = await User.create(req.body);
     var token = await user.signToken();
-    res.status(201).json({user:user.json(token)})
+    res.status(201).json({user:user.userJson(token)})
   } catch (error) {
     next(error)
   }
@@ -28,8 +27,10 @@ router.post('/',async (req,res,next)=>{
 
 //login
 router.post('/login',async (req,res,next)=>{
+  
  var {email,password} = req.body;
- if(!email||!user){
+ console.log(email,password)
+ if(!email||!password){
    return res.status(401).json({error:"Email/Password is required"})
  }
   try {
@@ -42,7 +43,7 @@ router.post('/login',async (req,res,next)=>{
       return res.status(403).json({error:"password is invalid"})
     }
     var token = await user.signToken();
-    res.status(201).json({user:user.json(token)})
+    res.status(201).json({user:user.userJson(token)})
   } catch (error) {
     next(error)
   }
@@ -50,8 +51,10 @@ router.post('/login',async (req,res,next)=>{
 
 //protected
 router.use(auth.verifyToken)
+
 //update user
 router.put('/',async (req,res,next)=>{
+  
   try {
     var user = await User.findByIdAndUpdate(req.user.userId,req.body);
     var token = await user.signToken();
