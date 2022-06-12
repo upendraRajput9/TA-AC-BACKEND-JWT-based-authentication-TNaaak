@@ -4,8 +4,9 @@ var jwt = require("jsonwebtoken");
 var Schema = mongoose.Schema;
 var userSchema = new Schema({
     name:{type:String,required:true},
-    Username : {type:String,required:true,unique:true},
+    username : {type:String,required:true,unique:true},
     email:{type:String,required:true,match:/@/,unique:true},
+    phone:{type:Number},
     password:{type:String,required:true,minlength:4},
     following:{type:Boolean},
     followingList:[{type:Schema.Types.ObjectId,ref:"User"}],
@@ -41,7 +42,8 @@ userSchema.methods.signToken = async function(){
     }
 };
 
-userSchema.methods.userJson = async function(token){
+userSchema.methods.userJson = function(token){
+
     return {
         name:this.name,
         email:this.email,
