@@ -3,11 +3,13 @@ var bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 var Schema = mongoose.Schema;
 var userSchema = new Schema({
+    image:{type:String},
     name:{type:String,required:true},
     username : {type:String,required:true,unique:true},
+    bio:{type:String},
     email:{type:String,required:true,match:/@/,unique:true},
-    phone:{type:Number},
     password:{type:String,required:true,minlength:4},
+    favorited:[{type:Schema.Types.ObjectId,ref:"User"}],
     following:{type:Boolean},
     followingList:[{type:Schema.Types.ObjectId,ref:"User"}],
     followerList:[{type:Schema.Types.ObjectId,ref:"User"}],
@@ -48,6 +50,15 @@ userSchema.methods.userJson = function(token){
         name:this.name,
         email:this.email,
         token:token
+    }
+}
+
+userSchema.methods.profileJson = function(token){
+    return {
+        username:this.username,
+        bio:this.bio,
+        image:this.image,
+        following:this.following
     }
 }
 module.exports = mongoose.model("User",userSchema)
