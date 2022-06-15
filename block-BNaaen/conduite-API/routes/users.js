@@ -5,7 +5,7 @@ var auth = require('../middelware/auth')
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/',async function(req, res, next) {
+router.get('/',auth.verifyToken,async function(req, res, next) {
   try {
     var users = await User.find({});
     res.status(201).json({users})
@@ -52,6 +52,16 @@ router.post('/login',async (req,res,next)=>{
 //protected
 router.use(auth.verifyToken)
 
+//profile
+router.get('/profile/:username',async (req,res,next)=>{
+  var username = req.params.username;
+  try {
+    var user = await User.findOne({username});
+    res.status(201).json({profile:user.profileJson()})
+  } catch (error) {
+    next()
+  }
+})
 //update user
 router.put('/',async (req,res,next)=>{
   

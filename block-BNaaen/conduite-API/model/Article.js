@@ -7,12 +7,11 @@ var Schema = mongoose.Schema;
 var articleSchema = new Schema({
 title:{type:String,required:true},
 slug:{type:String},
+body:{type:String},
 description: {type:String,required:true},
 tagList:[String],
 likes:[{type:Schema.Types.ObjectId,ref:"User"}],
 author:{type:Schema.Types.ObjectId,ref:"User"},
-favorited:{type:Boolean,default:false},
-favoritesCount:{type:Number,default:0},
 comment:[{type:Schema.Types.ObjectId,ref:"Comment"}]
 },{timestamps:true});
 
