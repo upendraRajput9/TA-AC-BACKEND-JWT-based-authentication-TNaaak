@@ -7,8 +7,10 @@ var mongoose = require("mongoose")
 
 require("dotenv").config();
 
+var profilesRouter = require('./routes/profiles')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var userRouter = require("./routes/user")
 var articlesRouter = require('./routes/articles')
 var commentsRouter = require('./routes/comments')
 mongoose.connect("mongodb://localhost/conduite-API")
@@ -25,9 +27,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/', indexRouter);
+app.use('/api', indexRouter);
 app.use('/api/users', usersRouter);
+app.use("/api/user",userRouter)
 app.use('/api/articles', articlesRouter);
+app.use('/api/profiles', profilesRouter);
 app.use('/api/comments',commentsRouter);
 
 // catch 404 and forward to error handler
