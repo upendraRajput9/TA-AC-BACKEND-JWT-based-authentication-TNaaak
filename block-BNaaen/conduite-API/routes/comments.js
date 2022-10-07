@@ -9,11 +9,12 @@ var router = express.Router()
 router.use(auth.verifyToken)
 
 //create comment
-router.post('/:id', async function (req, res, next) {
-  req.body.articleId = req.params.id
-  req.body.author = req.user.userId
+router.post('/:slug/comments', async function (req, res, next) {
+  req.body.articleId = req.params.slug
   try {
-    var comment = await Comment.create(req.body)
+    var user = await User.findById(req.user.userId);
+    req.body.comment.author = user.userJson()
+    var comment = await Comment.create(req.body.comment)
     var article = await Article.findByIdAndUpdate(req.body.articleId, {
       $push: { comment: commentId },
     })

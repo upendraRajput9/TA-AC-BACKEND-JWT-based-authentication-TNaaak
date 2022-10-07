@@ -4,8 +4,13 @@ var Schema = mongoose.Schema
 var commentSchema = new Schema(
   {
     body: { type: String },
-    author: { type: Schema.Types.ObjectId, ref: 'User' },
-    articleId:{type:Schema.Types.ObjectId,req:'Article'}
+    author: { 
+      username:String,
+      bio:String,
+      image:String,
+      followingList: [String]
+    },
+    articleSlug: { type: String }
   },
   { timestamps: true },
 )
